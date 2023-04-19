@@ -57,7 +57,9 @@ function App() {
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "0 0 500 500")
       .classed("svg-content-responsive", true)
-      .attr("transform", "translate(295, 115)");
+      .attr("transform", "translate(295, 115)")
+      .attr("xmlns", "http://www.w3.org/1999/xhtml");
+    //https://stackoverflow.com/questions/45518545/svg-foreignobject-not-showing-on-any-browser-why
 
     svg
       .selectAll("rect")
@@ -80,16 +82,27 @@ function App() {
       .join((enter) =>
         enter
           .append("foreignObject")
-          .append("div")
+          .attr("id", "forObj")
+          .attr("width", 50)
+          .attr("height", 50)
+          .attr("font-size", "5px")
+          .attr("color", "black")
+          //.attr("style", "overflow-y: scroll; scrollbar-width: none")
+          .attr("font-family", "Helvetica Neue")
+
+          .append("xhtml:div")
+
           .text(function (d) {
             return d.quote;
           })
       )
-      .attr("font-family", "Helvetica Neue")
-      .attr("font-size", "5")
-      .attr("fill", "black")
-      .attr("id", "text")
-      .attr("width", 30);
+      .attr(
+        "style",
+        "padding:3px 3px 3px 3px;overflow-y: scroll; width:95%; height:95%; scrollbar-width: none;"
+      )
+      .attr("id", "text");
+    //https://stackoverflow.com/questions/2426449/paragraph-p-padding-not-applied
+    // it should be style, padding: values
 
     simulation.on("tick", ticked);
 
@@ -121,7 +134,7 @@ function App() {
           return d.y;
         });
 
-      d3.selectAll("#text")
+      d3.selectAll("#forObj")
         .attr("x", function (d) {
           return d.x + 100;
         })
@@ -129,6 +142,10 @@ function App() {
           return d.y;
         });
     }
+
+    //d3.selectAll("#text").attr("width", 50).attr("height", 50);
+
+    d3.selectAll("#forObj").style("scrollbar-width", "none");
 
     function wrap(text) {
       text.each(function () {
